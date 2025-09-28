@@ -9,12 +9,15 @@ export function attachDotNet(dotnet) {
 
 export async function initMap(mapDivId, options) {
 
-    const centerLat = 43.6532;
-    const centerLng = -79.3832;
-    const zoom = 18;
-
-    _map = L.map(mapDivId).setView([centerLat, centerLng], zoom);
-
+    // convert nulls to undefined
+    console.log(options);
+    options.center = options.center ?? undefined;
+    options.zoom = options.zoom ?? undefined;
+    options.minZoom = options.minZoom ?? undefined;
+    options.maxZoom = options.maxZoom ?? undefined;
+    
+    _map = L.map(mapDivId, options);
+    
     L.tileLayer(
         "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
         {maxZoom: 20, attribution: "&copy; OpenStreetMap contributors"}

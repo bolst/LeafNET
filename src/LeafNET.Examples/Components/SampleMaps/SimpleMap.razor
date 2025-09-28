@@ -1,6 +1,6 @@
 
 
-<LeafletMap @bind-Map="_map" />
+<LeafletMap @bind-Map="_map" Options="_mapOptions" />
 
 
 
@@ -8,6 +8,13 @@
 
     private MapService? _map;
     private bool _mapInitialized;
+
+    private readonly MapOptions _mapOptions = new()
+    {
+        ZoomControl = false, 
+        Zoom = 10, 
+        Center = (43.6532, -79.3832),
+    };
 
     protected override async Task OnAfterRenderAsync(bool firstRedner)
     {

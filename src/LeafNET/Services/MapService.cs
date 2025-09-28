@@ -10,17 +10,18 @@ public class MapService : IAsyncDisposable
     private readonly DotNetObjectReference<LeafletMap> _dotNetRef;
     private readonly IJSObjectReference _jsRef;
     private readonly string _mapId;
+    private readonly MapOptions? _options;
     
-    private MapService(DotNetObjectReference<LeafletMap> dotNetRef, IJSObjectReference jsRef, string mapId)
+    private MapService(DotNetObjectReference<LeafletMap> dotNetRef, IJSObjectReference jsRef, string mapId, MapOptions? options = null)
     {
         _dotNetRef = dotNetRef;
         _jsRef = jsRef;
         _mapId = mapId;
+        _options = options;
     }
 
 
-
-    public static async Task<MapService?> InitializeAsync(LeafletMap leafletMap, IJSRuntime jsRuntime, string mapId)
+    public static async Task<MapService?> InitializeAsync(LeafletMap leafletMap, IJSRuntime jsRuntime, string mapId, MapOptions? options = null)
     {
         try
         {
@@ -31,9 +32,9 @@ public class MapService : IAsyncDisposable
             
             // initialize map in js
             await jsRef.InvokeVoidAsync("attachDotNet", dotNetRef);
-            await jsRef.InvokeVoidAsync("initMap", mapId, null);
+            await jsRef.InvokeVoidAsync("initMap", mapId, options);
             
-            return new MapService(dotNetRef, jsRef, mapId);
+            return new MapService(dotNetRef, jsRef, mapId, options);
         }
         catch (JSDisconnectedException)
         {
@@ -59,7 +60,7 @@ public class MapService : IAsyncDisposable
         }
         catch (Exception e)
         {
-            await Console.Error.WriteLineAsync($"Error disposing LeafletMapController: {e.Message}");
+            Console.WriteLine($"Error disposing LeafletMapController: {e.Message}");
         }
     }
 }

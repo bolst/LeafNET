@@ -17,6 +17,9 @@ public partial class LeafletMap : ComponentBase, IAsyncDisposable
     
     [Parameter]
     public EventCallback<MapService?> MapChanged { get; set; }
+    
+    [Parameter]
+    public MapOptions? Options { get; set; }
 
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -25,7 +28,7 @@ public partial class LeafletMap : ComponentBase, IAsyncDisposable
         {
             if (Map is null)
             {
-                Map = await MapService.InitializeAsync(this, JSRuntime, MapId);
+                Map = await MapService.InitializeAsync(this, JSRuntime, MapId, Options);
                 await MapChanged.InvokeAsync(Map);
             }
         }
