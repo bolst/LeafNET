@@ -16,4 +16,13 @@
       <_ContentIncludedByDefault Remove="wwwroot\css\app.css" />
     </ItemGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\LeafNET\LeafNET.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <AdditionalFiles Include="Components\Layout\MainLayout.razor" />
+      <AdditionalFiles Include="Components\Pages\Home.razor" />
+    </ItemGroup>
+
 </Project>
