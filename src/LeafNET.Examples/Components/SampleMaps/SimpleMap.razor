@@ -1,0 +1,20 @@
+
+
+<LeafletMap @bind-Map="_map" />
+
+
+
+@code {
+
+    private MapService? _map;
+    private bool _mapInitialized;
+
+    protected override async Task OnAfterRenderAsync(bool firstRedner)
+    {
+        if (!_mapInitialized)
+        {
+            _mapInitialized = true;
+        }
+    }
+
+}

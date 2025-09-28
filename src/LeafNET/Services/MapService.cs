@@ -1,0 +1,65 @@
+using Microsoft.JSInterop;
+
+namespace LeafNET;
+
+
+public class MapService : IAsyncDisposable
+{
+    private const string _jsPath = "./_content/LeafNET/LeafNET.js";
+
+    private readonly DotNetObjectReference<LeafletMap> _dotNetRef;
+    private readonly IJSObjectReference _jsRef;
+    private readonly string _mapId;
+    
+    private MapService(DotNetObjectReference<LeafletMap> dotNetRef, IJSObjectReference jsRef, string mapId)
+    {
+        _dotNetRef = dotNetRef;
+        _jsRef = jsRef;
+        _mapId = mapId;
+    }
+
+
+
+    public static async Task<MapService?> InitializeAsync(LeafletMap leafletMap, IJSRuntime jsRuntime, string mapId)
+    {
+        try
+        {
+            Console.WriteLine($"Initializing map {mapId}");
+
+            var dotNetRef = DotNetObjectReference.Create(leafletMap);
+            var jsRef = await jsRuntime.InvokeAsync<IJSObjectReference>("import", _jsPath);
+            
+            // initialize map in js
+            await jsRef.InvokeVoidAsync("attachDotNet", dotNetRef);
+            await jsRef.InvokeVoidAsync("initMap", mapId, null);
+            
+            return new MapService(dotNetRef, jsRef, mapId);
+        }
+        catch (JSDisconnectedException)
+        {
+            // TODO: bitch and complain you probably are not in OnAfterRender
+            await Console.Error.WriteLineAsync("Could not create MapService: JS Disconnected");
+            throw;
+        }
+        catch (Exception e)
+        {
+            await Console.Error.WriteLineAsync($"Could not create MapService: {e.Message}");
+            throw;
+        }
+    }
+
+    
+    
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            _dotNetRef?.Dispose();
+            await _jsRef.DisposeAsync();
+        }
+        catch (Exception e)
+        {
+            await Console.Error.WriteLineAsync($"Error disposing LeafletMapController: {e.Message}");
+        }
+    }
+}

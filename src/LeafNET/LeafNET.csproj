@@ -1,13 +1,31 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk.Razor">
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
-        <ImplicitUsings>enable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+      <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+    </PropertyGroup>
+
+
     <ItemGroup>
-      <Folder Include="Services\" />
+        <SupportedPlatform Include="browser"/>
+    </ItemGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="9.0.3"/>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="Components\LeafletMap.razor" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Base\" />
+      <Folder Include="Interfaces\" />
     </ItemGroup>
 
 </Project>
