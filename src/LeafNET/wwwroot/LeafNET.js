@@ -25,41 +25,6 @@ export async function initMap(mapDivId, options) {
 }
 
 
-export function addGeoPoints(geoPoints) {
-    if (!geoPoints)
-        return;
-
-    if (!_markerLayer) {
-        _markerLayer = L.featureGroup();
-        _map.addLayer(_markerLayer);
-    }
-
-    for (const geoPoint of geoPoints) {
-        try {
-            
-            if (geoPoint.icon)
-                geoPoint.options.icon = geoPoint.icon;
-            
-            const marker = L.marker([geoPoint.latitude, geoPoint.longitude], geoPoint.options);
-            _markerLayer.addLayer(marker);
-            _markers.push(marker);
-        } catch (error) {
-            console.error('Error adding marker:', error);
-        }
-    }
-    
-    return _markers.map(x => x.options)
-}
-
-export function fitBounds() {
-    if (!_map || !_markerLayer) { return; }
-    
-    _map.fitBounds(_markerLayer.getBounds());
-}
-
-
-export function flyTo(lat, lng, zoom, zoomPanOptions) {
-    if (!_map) { return; }
-    
-    _map.flyTo(L.latLng(lat, lng), zoom, zoomPanOptions);
+export function setView(center, zoom, options) {
+    _map.setView(center, zoom, options);
 }

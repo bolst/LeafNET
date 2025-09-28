@@ -1,12 +1,17 @@
 
 
-<LeafletMap @bind-Map="_map" Options="_mapOptions" />
+<LeafletMap @bind-Map="Map" Options="_mapOptions" />
 
 
 
 @code {
 
-    private MapService? _map;
+    [Parameter]
+    public MapService? Map { get; set; }
+    
+    [Parameter]
+    public EventCallback<MapService> MapChanged { get; set; }
+
     private bool _mapInitialized;
 
     private readonly MapOptions _mapOptions = new()
@@ -18,9 +23,10 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRedner)
     {
-        if (!_mapInitialized)
+        if (!_mapInitialized && Map is not null)
         {
             _mapInitialized = true;
+            await MapChanged.InvokeAsync(Map);
         }
     }
 

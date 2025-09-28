@@ -51,6 +51,15 @@ public class MapService : IAsyncDisposable
 
     
     
+    #region Map state
+
+    public ValueTask SetView(LatLng center, int zoom)
+        => _jsRef.InvokeVoidAsync("setView", center, zoom, new { Animate = true });
+    
+    #endregion
+    
+    
+    
     public async ValueTask DisposeAsync()
     {
         try
